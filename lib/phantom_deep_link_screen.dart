@@ -75,16 +75,11 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
 
     try {
       final uri = Uri.parse(url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-        _addLog('✅ URL opened successfully');
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      _addLog('✅ URL opened successfully');
 
-        await Future.delayed(Duration(seconds: 2));
-        _simulateConnection();
-      } else {
-        _addLog('❌ Cannot open Phantom URL');
-        _showPhantomInstallDialog();
-      }
+      await Future.delayed(Duration(seconds: 2));
+      _simulateConnection();
     } catch (error) {
       _addLog('❌ Connection failed: $error');
       _showErrorDialog('연결 오류', 'Phantom 연결에 실패했습니다: $error');
@@ -95,12 +90,18 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
     setState(() {
       phantomWalletPublicKey = _generateMockWalletAddress();
     });
-    _addLog('🎉 Successfully connected to wallet: ${phantomWalletPublicKey!.substring(0, 20)}...');
-    _showSuccessDialog('연결 성공!', '지갑이 성공적으로 연결되었습니다.\n\n공개키: ${phantomWalletPublicKey!.substring(0, 20)}...');
+    _addLog(
+      '🎉 Successfully connected to wallet: ${phantomWalletPublicKey!.substring(0, 20)}...',
+    );
+    _showSuccessDialog(
+      '연결 성공!',
+      '지갑이 성공적으로 연결되었습니다.\n\n공개키: ${phantomWalletPublicKey!.substring(0, 20)}...',
+    );
   }
 
   String _generateMockWalletAddress() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     final random = math.Random();
     String result = '';
 
@@ -156,7 +157,10 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
     try {
       final mockSignature = _generateMockSignature(message);
       _addLog('✅ Message signed: ${mockSignature.substring(0, 20)}...');
-      _showSuccessDialog('서명 성공', '메시지가 성공적으로 서명되었습니다.\n\n서명: ${mockSignature.substring(0, 20)}...');
+      _showSuccessDialog(
+        '서명 성공',
+        '메시지가 성공적으로 서명되었습니다.\n\n서명: ${mockSignature.substring(0, 20)}...',
+      );
     } catch (error) {
       _addLog('❌ Sign message failed: $error');
     }
@@ -177,7 +181,10 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
 
       final mockTxSignature = _generateMockTransactionSignature();
       _addLog('✅ Transaction sent: ${mockTxSignature.substring(0, 20)}...');
-      _showSuccessDialog('트랜잭션 성공', '트랜잭션이 성공적으로 전송되었습니다.\n\n서명: ${mockTxSignature.substring(0, 20)}...');
+      _showSuccessDialog(
+        '트랜잭션 성공',
+        '트랜잭션이 성공적으로 전송되었습니다.\n\n서명: ${mockTxSignature.substring(0, 20)}...',
+      );
     } catch (error) {
       _addLog('❌ Transaction preparation failed: $error');
       _showErrorDialog('트랜잭션 오류', '트랜잭션 생성 중 오류가 발생했습니다: $error');
@@ -185,7 +192,9 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
   }
 
   String _generateMockSignature(String data) {
-    final bytes = utf8.encode(data + DateTime.now().millisecondsSinceEpoch.toString());
+    final bytes = utf8.encode(
+      data + DateTime.now().millisecondsSinceEpoch.toString(),
+    );
     final hash = sha256.convert(bytes);
     return base64.encode(hash.bytes);
   }
@@ -198,7 +207,9 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
   }
 
   Future<void> _testRedirectUrl() async {
-    final testUrl = _createRedirectUrl('onPhantomConnected?test=true&timestamp=${DateTime.now().millisecondsSinceEpoch}');
+    final testUrl = _createRedirectUrl(
+      'onPhantomConnected?test=true&timestamp=${DateTime.now().millisecondsSinceEpoch}',
+    );
     _addLog('🧪 Testing redirect URL: $testUrl');
 
     try {
@@ -213,7 +224,7 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
         _addLog('❌ Cannot open redirect URL - scheme may not be registered');
         _showErrorDialog(
           'URL Scheme 테스트 실패',
-          'URL scheme이 제대로 등록되지 않았을 수 있습니다.\n\n앱을 다시 빌드해보세요.'
+          'URL scheme이 제대로 등록되지 않았을 수 있습니다.\n\n앱을 다시 빌드해보세요.',
         );
       }
     } catch (error) {
@@ -229,14 +240,16 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
       _createRedirectUrl('test'),
       _createRedirectUrl('onPhantomConnected'),
       'https://phantom.app',
-      'phantom://v1/connect'
+      'phantom://v1/connect',
     ];
 
     for (final testUrl in testUrls) {
       try {
         final uri = Uri.parse(testUrl);
         final canOpen = await canLaunchUrl(uri);
-        _addLog('${canOpen ? '✅' : '❌'} $testUrl: ${canOpen ? 'OK' : 'Cannot open'}');
+        _addLog(
+          '${canOpen ? '✅' : '❌'} $testUrl: ${canOpen ? 'OK' : 'Cannot open'}',
+        );
       } catch (error) {
         _addLog('❌ $testUrl: Error - $error');
       }
@@ -285,7 +298,9 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Phantom 앱 필요'),
-          content: Text('Phantom 지갑 앱이 설치되어 있지 않거나 업데이트가 필요합니다.\n\n앱 스토어에서 Phantom 앱을 설치해주세요.'),
+          content: Text(
+            'Phantom 지갑 앱이 설치되어 있지 않거나 업데이트가 필요합니다.\n\n앱 스토어에서 Phantom 앱을 설치해주세요.',
+          ),
           actions: [
             TextButton(
               child: Text('취소'),
@@ -327,10 +342,7 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
                   SizedBox(height: 10),
                   Text(
                     '기존 Phantom 앱과 연결',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 30),
@@ -339,7 +351,10 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
                     onPressed: _connect,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFab9ff2),
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 15,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -359,7 +374,10 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
                     onPressed: _testRedirectUrl,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF4CAF50),
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 15,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -379,7 +397,10 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
                     onPressed: _testLinkingCapabilities,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFFF9800),
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 15,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -461,17 +482,11 @@ class PhantomDeepLinkScreenState extends State<PhantomDeepLinkScreen> {
                   SizedBox(height: 10),
                   Text(
                     '• Phantom 지갑 앱 설치 필요',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
                   Text(
                     '• Devnet에서 테스트',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
                 ],
               ),
