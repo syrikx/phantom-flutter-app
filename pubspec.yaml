@@ -45,6 +45,9 @@ dependencies:
   # Secure storage
   flutter_secure_storage: ^9.0.0
 
+  # Deep linking
+  app_links: ^6.1.4
+
   # JSON handling
   json_annotation: ^4.8.1
 

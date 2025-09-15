@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'phantom_wallet_service.dart';
 import 'wallet_screen.dart';
 import 'phantom_deep_link_screen.dart';
+import 'deep_link_service.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,6 +34,23 @@ class PhantomApp extends StatefulWidget {
 class PhantomAppState extends State<PhantomApp> {
   bool useDeepLink = false;
   final PhantomWalletService walletService = PhantomWalletService();
+  final DeepLinkService _deepLinkService = DeepLinkService();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeDeepLinks();
+  }
+
+  Future<void> _initializeDeepLinks() async {
+    await _deepLinkService.initialize();
+  }
+
+  @override
+  void dispose() {
+    _deepLinkService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +86,7 @@ class PhantomAppState extends State<PhantomApp> {
       ),
       body: Center(
         child: useDeepLink
-          ? const PhantomDeepLinkScreen()
+          ? PhantomDeepLinkScreen(deepLinkService: _deepLinkService)
           : WalletScreen(),
       ),
     );
